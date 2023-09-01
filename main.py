@@ -11,5 +11,5 @@ sensor = LaserSensor()
 while True:
     data = sensor.get_data()
     publisher.publish(data)
-    write_to_file("./files/saved_data.txt", data)
+    write_to_file("../saved_data.txt", data)
     print(data)

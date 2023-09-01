@@ -1,3 +1,4 @@
+from .ports import find_laser_port
 from .sensor import Sensor
 
 
@@ -11,7 +12,9 @@ class Commands:
 
 class LaserSensor(Sensor):
     def __init__(self) -> None:
-        super().__init__("COM3", 115200)
+        self.port = find_laser_port()
+        super().__init__(self.port, 115200)
+        # super().__init__("COM3", 115200)
         # super().__init__("/dev/ttyUSB0", 115200)
 
     def get_data(self) -> str:
