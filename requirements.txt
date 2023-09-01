@@ -1,0 +1,5 @@
+awscrt
+awsiot
+awsiotsdk
+paho-mqtt
+pyserial
