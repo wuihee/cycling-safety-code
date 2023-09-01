@@ -57,7 +57,6 @@ Get time, distance, and signal strength in a string.
 data = sensor.get_data()
 ```
 
-Measure dist
 
 ### Publishing Data
 
