@@ -3,6 +3,7 @@ import cv2
 import depthai
 
 from .sensors.laser import LaserSensor
+from .utils import write_to_file
 
 
 class CameraWithSensor:
@@ -93,7 +94,10 @@ class CameraWithSensor:
                         distance, _ = self.sensor.measure_distance()
                         vehicles.add(vehicle_id)
                         if distance <= 1500:
-                            print("Car detected < 1.5m")
+                            write_to_file(
+                                "./passed_cars.txt",
+                                f"{self.sensor.current_time} {distance} {label}",
+                            )
 
                     cv2.putText(
                         frame,
