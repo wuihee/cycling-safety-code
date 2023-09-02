@@ -1,5 +1,8 @@
 awscrt
 awsiot
 awsiotsdk
+blobconverter
+depthai
+opencv-python
 paho-mqtt
 pyserial
