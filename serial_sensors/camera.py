@@ -2,13 +2,16 @@ import blobconverter
 import cv2
 import depthai
 
+from .client.publish import Publisher
 from .sensors.laser import LaserSensor
 from .utils import write_to_file
 
 
 class CameraWithSensor:
     def __init__(self, xml_path, bin_path):
+        self.publisher = Publisher()
         self.sensor = LaserSensor()
+
         self.labels = {2: "Car", 5: "Bus", 8: "Truck"}
         self.network_path = blobconverter.from_openvino(
             xml=xml_path, bin=bin_path, shaves=6
@@ -94,10 +97,9 @@ class CameraWithSensor:
                         distance, _ = self.sensor.measure_distance()
                         vehicles.add(vehicle_id)
                         if distance <= 1500:
-                            write_to_file(
-                                "./passed_cars.txt",
-                                f"{self.sensor.current_time} {distance} {label}",
-                            )
+                            data = f"{self.sensor.current_time} {distance} {label}"
+                            self.publisher.publish(data)
+                            write_to_file("./passed_cars.txt", data)
 
                     cv2.putText(
                         frame,
