@@ -1,6 +1,6 @@
-from serial_sensors.client.publish import Publisher
-from serial_sensors.sensors.laser import LaserSensor
-from serial_sensors.utils import cd_to_parent_dir, wait_for_internet, write_to_file
+from src.aws_iot.publish import Publisher
+from src.sensors.serial.jrt_laser import LaserSensor
+from src.utils import cd_to_parent_dir, wait_for_internet, write_to_file
 
 cd_to_parent_dir()
 wait_for_internet()

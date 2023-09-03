@@ -1,4 +1,4 @@
-from serial_sensors.client.subscribe import Subscriber
+from src.aws_iot.subscribe import Subscriber
 
 subscriber = Subscriber()
 subscriber.subscribe()

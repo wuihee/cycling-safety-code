@@ -2,9 +2,9 @@ import blobconverter
 import cv2
 import depthai
 
-from .client.publish import Publisher
-from .sensors.laser import LaserSensor
-from .utils import write_to_file
+from ..aws_iot.publish import Publisher
+from ..utils import write_to_file
+from . import LaserSensor
 
 
 class CameraWithSensor:
