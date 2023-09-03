@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
-from constants import AWSConstants
 
 from ..utils import write_to_file
+from .constants import AWSConstants
 
 
 class Subscriber:
