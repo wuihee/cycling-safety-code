@@ -22,6 +22,24 @@ pip install -r requirements.txt
 
 ### Raspberry Pi Autostart on Boot with Systemd
 
+#### Automatically Create Service
+
+Automatically create a service that autoruns your script with `create_service.sh`.
+
+First make the script executable.
+
+```bash
+chmod +x create_service.sh
+```
+
+Run the script and follow the prompts.
+
+```bash
+sudo ./create_service.sh
+```
+
+#### Manually Create Service
+
 Create a service in `/usr/lib/systemd/system`. E.g. `sensor.service`.
 
 - Include the path to your script in ExecStart.
