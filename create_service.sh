@@ -21,7 +21,7 @@ then
 fi
 
 # Create the systemd service file content.
-service_content = "[Service]
+service_content="[Service]
 ExecStart=/usr/bin/python3 $script_path
 User=$SUDO_USER
 
@@ -29,7 +29,7 @@ User=$SUDO_USER
 WantedBy=multi-user.target"
 
 # Define the service file path.
-service_file_path = "/usr/lib/systemd/system/$service_name.service"
+service_file_path="/usr/lib/systemd/system/$service_name.service"
 
 # Write the content to the service file.
 echo "$service_content" > "$service_file_path"
