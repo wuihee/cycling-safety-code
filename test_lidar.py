@@ -12,6 +12,6 @@ publisher = Publisher()
 sensor = LidarLiteV4()
 
 while True:
-    distance = sensor.get_distance()
-    publisher.publish(distance)
-    print(distance)
+    data = sensor.get_data()
+    publisher.publish(data)
+    print(data)
