@@ -6,3 +6,4 @@ depthai
 opencv-python
 paho-mqtt
 pyserial
+smbus2
