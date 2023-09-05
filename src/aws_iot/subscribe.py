@@ -40,7 +40,7 @@ class Subscriber:
         """
         distance = self._decode_message(msg.payload)
         print(distance)
-        write_to_file("../tof_data.txt", distance)
+        write_to_file("./tof_data.txt", distance)
 
     def _on_subscribe(self, client, userdata, mid, granted_qos) -> None:
         """
