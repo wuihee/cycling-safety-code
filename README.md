@@ -84,6 +84,20 @@ sudo systemctl status SERVICE_NAME.service
 
 ### Sensors
 
+#### Garmin's LIDAR-Lite V4
+
+Install I2C tools.
+
+```bash
+sudo apt-get install -y i2c-tools
+```
+
+Check to see if sensor is connected to I2C interface.
+
+```bash
+i2cdetect -y 1
+```
+
 ### AWS IoT Message Broker
 
 ## Repository Structure
