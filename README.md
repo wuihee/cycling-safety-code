@@ -155,7 +155,7 @@ In my experiments, I needed my scripts to autostart on boot on the Raspberry Pi 
 
 ### Automatically Create Service
 
-Automatically create a service that autoruns your script with `create_service.sh`.
+Automatically create a service that autoruns your script with [`create_service.sh`](./scripts/create_service.sh).
 
 First make the script executable.
 
