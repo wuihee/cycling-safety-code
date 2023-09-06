@@ -1,4 +1,4 @@
-# Traffic Data Collection Sensors
+# Traffic Data Sensors
 
 Code to run the sensors and publish/subscribe to AWS IoT message broker in [traffic data analysis project](https://github.com/wuihee/Traffic-Data-Collection/tree/main).
 
@@ -119,7 +119,7 @@ To use the sensor on the Raspberry Pi:
 ### [WaveShare TOF Sensor](https://www.waveshare.com/tof-laser-range-sensor.htm)
 
 - Follow the [serial sensor setup](#serial-sensor-setup).
-- **Baudrate**: 921600ß
+- **Baudrate**: 921600bps
 
 #### TOF Sensor Code
 
