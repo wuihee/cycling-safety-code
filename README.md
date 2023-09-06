@@ -9,23 +9,25 @@ Code to run the sensors and publish/subscribe to AWS IoT message broker in [traf
 
 ## Installation & Setup
 
-- **Dependencies**:
+### Install Dependencies
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
-- **Build Package**:
+### Build Package
 
-    ```bash
-    python setup.py
-    ```
+```bash
+python setup.py
+```
 
-- **Install `traffic_data_sensors` Locally**: This will allow you to run files in [scripts](./scripts/).
+### Install Package Locally
 
-    ```bash
-    pip install -e .
-    ```
+This will allow you to run .py files in [scripts](./scripts/) locally.
+
+```bash
+pip install -e .
+```
 
 ### Raspberry Pi Autostart on Boot with Systemd
 
