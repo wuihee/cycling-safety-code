@@ -119,31 +119,79 @@ To use the sensor on the Raspberry Pi:
 ### [WaveShare TOF Sensor](https://www.waveshare.com/tof-laser-range-sensor.htm)
 
 - Follow the [serial sensor setup](#serial-sensor-setup).
-- **Baudrate**: 921600
+- **Baudrate**: 921600ß
+
+#### TOF Sensor Code
+
+```python
+from traffic_data_sensors.sensors.serial.waveshare_tof import TOFSensor
+
+sensor = TOFSensor()
+sensor.get_data()
+```
 
 ### [JRT BB2X Laser Distance Sensor](https://www.alibaba.com/product-detail/)
 
 - Follow the [serial sensor setup](#serial-sensor-setup).
 - **Baudrate**: 115200bps.
 
-### [LIDAR-Lite V4](https://www.sparkfun.com/products/18009)
+#### Laser Sensor Code
 
-Install I2C tools.
+```python
+from traffic_data_sensors.sensors.serial.jrt_laser import LaserSensor
 
-```bash
-sudo apt-get install -y i2c-tools
+sensor = LaserSensor()
+sensor.get_data()
 ```
 
-Check to see if sensor is connected to I2C interface. The sensor should be connected at address 0x62.
+### [LIDAR-Lite V4](https://www.sparkfun.com/products/18009)
 
-```bash
-i2cdetect -y 1
+#### Raspberry Pi I2C Setup
+
+- **Enable I2C Settings**: Enter the following command in the terminal:
+
+    ```bash
+    sudo raspi-config
+    ```
+
+- Interfaces Options &rarr; I2C
+  - Would you like ARM I2C interface to be enabled? &rarr; Yes
+  - Would you like the I2C kernel module to be loaded by default? &rarr; Yes
+- **I2C Command Line Tools**:
+
+    ```bash
+    sudo apt-get install -y i2c-tools
+    ```
+
+- Check to see if sensor is connected to I2C interface. The sensor should be connected at address 0x62.
+
+    ```bash
+    i2cdetect -y 1
+    ```
+
+#### LIDAR Sensor Code
+
+```python
+from traffic_data_sensors.sensors.lidar_lite_v4 import LidarLiteV4
+
+sensor = LidarLiteV4()
+sensor.get_data()
+```
+
+### Publish to AWS IoT Message Broker
+
+```python
+from serial_sensors.client.publish import Publisher
+
+publisher = Publisher()
+data = "data to publish"
+publisher.publish(data)
 ```
 
 ### Subscribe to AWS IoT Message Broker
 
 ```python
-from src.aws_iot.subscribe import Subscriber
+from traffic_data_sensors.aws_iot.subscribe import Subscriber
 
 subscriber = Subscriber()
 subscriber.subscribe()
