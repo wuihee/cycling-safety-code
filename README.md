@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ### Build Package
 
 ```bash
-python setup.py
+python setup.py bdist_wheel sdist
 ```
 
 ### Install Package Locally
