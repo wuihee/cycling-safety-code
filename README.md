@@ -33,6 +33,8 @@ pip install -e .
 
 ## Usage
 
+**IMPORTANT: To ensure good connectivity to the Raspberry Pi, make sure the Raspberry Pi is connected to a 5V power source and if using USB cables, make sure that they are USB 2.0.**
+
 ### Serial Sensor Setup
 
 #### Windows Setup
@@ -43,7 +45,7 @@ To use the sensor on Windows with the software provided:
 - **Enable COM Ports**: Windows Device Manager &rarr; Actions &rarr; Add Legacy Hardware &rarr; And installing Ports (COM & LPT).
 - **Baud Rate**: Finally, for the sensor to work with the software, make sure the baudrate is correctly set.
 
-#### Raspberry Pi Setup
+#### Raspberry Pi UART Setup
 
 To use the sensor on the Raspberry Pi:
 
@@ -59,10 +61,10 @@ To use the sensor on the Raspberry Pi:
 - **Enable UART**: Open `/boot/config.txt`:
 
     ```bash
-    nano /boot/config.txt
+    sudo nano /boot/config.txt
     ```
 
-- Add the following line to the end of the file:
+- Make sure the following line is in the file:
 
     ```text
     enable_uart=1
@@ -119,6 +121,18 @@ sensor.get_data()
 
     ```bash
     i2cdetect -y 1
+    ```
+
+- **Enable I2C**: Open `/boot/config.txt`:
+
+    ```bash
+    sudo nano /boot/config.txt
+    ```
+
+- Make sure the following line is in the file:
+
+    ```text
+    enable_uart=1
     ```
 
 #### LIDAR Sensor Code
