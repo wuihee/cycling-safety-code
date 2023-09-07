@@ -5,8 +5,8 @@ from traffic_data_sensors.sensors.lidar_lite_v4 import LidarLiteV4
 from traffic_data_sensors.utils import cd_to_parent_dir, wait_for_internet
 
 cd_to_parent_dir()
-os.chdir("..")
-
+os.chdir("../..")
+print(os.getcwd())
 
 wait_for_internet()
 
