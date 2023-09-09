@@ -102,37 +102,43 @@ sensor.get_data()
 
 #### Raspberry Pi I2C Setup
 
-- **Enable I2C Settings**: Enter the following command in the terminal:
+1. **Enable I2C Settings**: Enter the following command in the terminal:
 
     ```bash
     sudo raspi-config
     ```
 
-- Interfaces Options &rarr; I2C
-  - Would you like ARM I2C interface to be enabled? &rarr; Yes
-  - Would you like the I2C kernel module to be loaded by default? &rarr; Yes
-- **I2C Command Line Tools**:
+    Interfaces Options &rarr; I2C
+   - Would you like ARM I2C interface to be enabled? &rarr; Yes
+   - Would you like the I2C kernel module to be loaded by default? &rarr; Yes
+2. **I2C Bus Speed**: It is importatnt to set the correct bus speed so the I2C connection remains stable. First, open `/boot/config.txt`:
+  
+    ```bash
+    sudo nano /boot/config.txt
+    ```
+
+    This line should already exist, meaning I2C is enabled:
+
+    ```bash
+    dtparam=i2c_arm=on
+    ```
+
+    To adjust the bus speed:
+
+    ```bash
+    i2c_arm_baudrate=20000
+    ```
+
+3. **I2C Command Line Tools**:
 
     ```bash
     sudo apt-get install -y i2c-tools
     ```
 
-- Check to see if sensor is connected to I2C interface. The sensor should be connected at address 0x62.
+    Check to see if sensor is connected to I2C interface. The sensor should be connected at address 0x62.
 
     ```bash
     i2cdetect -y 1
-    ```
-
-- **Enable I2C**: Open `/boot/config.txt`:
-
-    ```bash
-    sudo nano /boot/config.txt
-    ```
-
-- Make sure the following line is in the file:
-
-    ```text
-    enable_uart=1
     ```
 
 #### LIDAR Sensor Code
