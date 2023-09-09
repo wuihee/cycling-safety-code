@@ -1,16 +1,20 @@
+import time
+import pickle
+from collections import defaultdict
+
 import blobconverter
 import cv2
 import depthai
 
 from ..aws_iot.publish import Publisher
 from ..utils import write_to_file
-from . import LaserSensor
+from .lidar_lite_v4 import LidarLiteV4
 
 
 class CameraWithSensor:
     def __init__(self, xml_path, bin_path):
         self.publisher = Publisher()
-        self.sensor = LaserSensor()
+        self.sensor = LidarLiteV4()
 
         self.labels = {2: "Car", 5: "Bus", 8: "Truck"}
         self.network_path = blobconverter.from_openvino(
@@ -69,7 +73,7 @@ class CameraWithSensor:
         object_tracker.passthroughTrackerFrame.link(xout_rgb.input)
 
     def process(self):
-        vehicles = set()
+        vehicles = defaultdict(list)
 
         with depthai.Device(self.pipeline) as device:
             preview = device.getOutputQueue("preview", 4, False)
@@ -93,13 +97,21 @@ class CameraWithSensor:
 
                     label = self.labels[t.label]
                     vehicle_id = t.id
-                    if vehicle_id not in vehicles:
-                        distance, _ = self.sensor.measure_distance()
-                        vehicles.add(vehicle_id)
-                        if distance <= 1500:
-                            data = f"{self.sensor.current_time} {distance} {label}"
-                            self.publisher.publish(data)
-                            write_to_file("./passed_cars.txt", data)
+
+                    try:
+                        distance = self.sensor.get_distance()
+                        time.sleep(0.02)
+                    except OSError:
+                        distance = float('inf')
+                        
+                    if distance <= 1500:
+                        vehicles[vehicle_id].append(distance)
+                        with open("vehicle_distance_data.pkl", "wb") as fp:
+                            pickle.dump(vehicles, fp)
+                        data = f"{self.sensor.current_time} {distance} {label}"
+                        self.publisher.publish(data)
+                        # write_to_file("./passed_cars.txt", data)
+                        print(data)
 
                     cv2.putText(
                         frame,
