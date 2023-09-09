@@ -1,5 +1,6 @@
 import os
 import socket
+import subprocess
 import time
 
 
@@ -40,3 +41,13 @@ def is_internet_available() -> bool:
 def wait_for_internet() -> None:
     while not is_internet_available():
         time.sleep(1)
+        
+        
+def wait_for_i2c(address, bus=1, timeout=60):
+    end_time = time.time() + timeout
+    while time.time() < end_time:
+        result = subprocess.check_output(["i2cdetect", "-y", str(bus)]).decode("utf-8")
+        if str(address) in result:
+            return True
+        time.sleep(1)
+    return False
