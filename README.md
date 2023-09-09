@@ -33,6 +33,8 @@ pip install -e .
 
 ## Usage
 
+**IMPORTANT: To ensure good connectivity to the Raspberry Pi, make sure the Raspberry Pi is connected to a 5V power source and if using USB cables, make sure that they are USB 2.0.**
+
 ### Serial Sensor Setup
 
 #### Windows Setup
@@ -43,26 +45,26 @@ To use the sensor on Windows with the software provided:
 - **Enable COM Ports**: Windows Device Manager &rarr; Actions &rarr; Add Legacy Hardware &rarr; And installing Ports (COM & LPT).
 - **Baud Rate**: Finally, for the sensor to work with the software, make sure the baudrate is correctly set.
 
-#### Raspberry Pi Setup
+#### Raspberry Pi UART Setup
 
 To use the sensor on the Raspberry Pi:
 
-- **Enable Serial Port Settings**: Enter the following command in the terminal:
+1. **Enable Serial Port Settings**: Enter the following command in the terminal:
 
     ```bash
     sudo raspi-config
     ```
 
-- Interfaces Options &rarr; Serial Port
-  - Would you like a login shell to be accessible over serial? &rarr; No
-  - Would you like serial port hardware to be enabled &rarr; Yes
-- **Enable UART**: Open `/boot/config.txt`:
+    Interfaces Options &rarr; Serial Port
+    - Would you like a login shell to be accessible over serial? &rarr; No
+    - Would you like serial port hardware to be enabled &rarr; Yes
+2. **Enable UART**: Open `/boot/config.txt`:
 
     ```bash
-    nano /boot/config.txt
+    sudo nano /boot/config.txt
     ```
 
-- Add the following line to the end of the file:
+    Make sure the following line is in the file:
 
     ```text
     enable_uart=1
@@ -100,22 +102,40 @@ sensor.get_data()
 
 #### Raspberry Pi I2C Setup
 
-- **Enable I2C Settings**: Enter the following command in the terminal:
+1. **Enable I2C Settings**: Enter the following command in the terminal:
 
     ```bash
     sudo raspi-config
     ```
 
-- Interfaces Options &rarr; I2C
-  - Would you like ARM I2C interface to be enabled? &rarr; Yes
-  - Would you like the I2C kernel module to be loaded by default? &rarr; Yes
-- **I2C Command Line Tools**:
+    Interfaces Options &rarr; I2C
+   - Would you like ARM I2C interface to be enabled? &rarr; Yes
+   - Would you like the I2C kernel module to be loaded by default? &rarr; Yes
+2. **I2C Bus Speed**: It is importatnt to set the correct bus speed so the I2C connection remains stable. First, open `/boot/config.txt`:
+  
+    ```bash
+    sudo nano /boot/config.txt
+    ```
+
+    This line should already exist, meaning I2C is enabled:
+
+    ```bash
+    dtparam=i2c_arm=on
+    ```
+
+    To adjust the bus speed:
+
+    ```bash
+    i2c_arm_baudrate=20000
+    ```
+
+3. **I2C Command Line Tools**:
 
     ```bash
     sudo apt-get install -y i2c-tools
     ```
 
-- Check to see if sensor is connected to I2C interface. The sensor should be connected at address 0x62.
+    Check to see if sensor is connected to I2C interface. The sensor should be connected at address 0x62.
 
     ```bash
     i2cdetect -y 1

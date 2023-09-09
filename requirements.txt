@@ -7,3 +7,4 @@ opencv-python
 paho-mqtt
 pyserial
 smbus2
+wheel
