@@ -1,5 +1,5 @@
-import time
 import pickle
+import time
 from collections import defaultdict
 
 import blobconverter
@@ -102,8 +102,8 @@ class CameraWithSensor:
                         distance = self.sensor.get_distance()
                         time.sleep(0.02)
                     except OSError:
-                        distance = float('inf')
-                        
+                        distance = float("inf")
+
                     if distance <= 1500:
                         vehicles[vehicle_id].append(distance)
                         with open("vehicle_distance_data.pkl", "wb") as fp:

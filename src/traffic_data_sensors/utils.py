@@ -39,11 +39,25 @@ def is_internet_available() -> bool:
 
 
 def wait_for_internet() -> None:
+    """
+    Wait for internet connection.
+    """
     while not is_internet_available():
         time.sleep(1)
-        
-        
-def wait_for_i2c(address, bus=1, timeout=60):
+
+
+def wait_for_i2c(address, bus=1, timeout=60) -> bool:
+    """
+    Wait for an I2C connection at specified address.
+
+    Args:
+        address (_type_): I2C Address.
+        bus (int, optional): I2C bus. Defaults to 1.
+        timeout (int, optional): How long to wait for. Defaults to 60.
+
+    Returns:
+        _type_: True if connection exists, false otherwise.
+    """
     end_time = time.time() + timeout
     while time.time() < end_time:
         result = subprocess.check_output(["i2cdetect", "-y", str(bus)]).decode("utf-8")
