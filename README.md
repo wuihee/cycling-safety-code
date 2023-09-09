@@ -49,22 +49,22 @@ To use the sensor on Windows with the software provided:
 
 To use the sensor on the Raspberry Pi:
 
-- **Enable Serial Port Settings**: Enter the following command in the terminal:
+1. **Enable Serial Port Settings**: Enter the following command in the terminal:
 
     ```bash
     sudo raspi-config
     ```
 
-- Interfaces Options &rarr; Serial Port
-  - Would you like a login shell to be accessible over serial? &rarr; No
-  - Would you like serial port hardware to be enabled &rarr; Yes
-- **Enable UART**: Open `/boot/config.txt`:
+    Interfaces Options &rarr; Serial Port
+    - Would you like a login shell to be accessible over serial? &rarr; No
+    - Would you like serial port hardware to be enabled &rarr; Yes
+2. **Enable UART**: Open `/boot/config.txt`:
 
     ```bash
     sudo nano /boot/config.txt
     ```
 
-- Make sure the following line is in the file:
+    Make sure the following line is in the file:
 
     ```text
     enable_uart=1
