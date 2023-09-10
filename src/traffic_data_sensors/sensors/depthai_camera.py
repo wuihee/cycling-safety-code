@@ -102,16 +102,15 @@ class CameraWithSensor:
                         distance = self.sensor.get_distance()
                         time.sleep(0.02)
                     except OSError:
-                        distance = float("inf")
+                        distance = -1
 
-                    if distance <= 1500:
-                        vehicles[vehicle_id].append(distance)
-                        with open("vehicle_distance_data.pkl", "wb") as fp:
-                            pickle.dump(vehicles, fp)
-                        data = f"{self.sensor.current_time} {distance} {label}"
-                        self.publisher.publish(data)
-                        # write_to_file("./passed_cars.txt", data)
-                        print(data)
+                    vehicles[vehicle_id].append(distance)
+                    with open("vehicle_distance_data.pkl", "wb") as fp:
+                        pickle.dump(vehicles, fp)
+                    data = f"{self.sensor.current_time} {distance} {label}"
+                    self.publisher.publish(data)
+                    # write_to_file("./passed_cars.txt", data)
+                    print(data)
 
                     cv2.putText(
                         frame,
@@ -125,7 +124,7 @@ class CameraWithSensor:
                         frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX
                     )
 
-                cv2.imshow("tracker", frame)
+                # cv2.imshow("tracker", frame)
 
                 if cv2.waitKey(1) == ord("q"):
                     break
