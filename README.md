@@ -126,7 +126,7 @@ sensor.get_data()
     To adjust the bus speed:
 
     ```bash
-    i2c_arm_baudrate=20000
+    i2c_arm_baudrate=100000
     ```
 
 3. **I2C Command Line Tools**:
