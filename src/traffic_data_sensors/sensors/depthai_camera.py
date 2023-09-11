@@ -124,7 +124,7 @@ class CameraWithSensor:
                         frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX
                     )
 
-                # cv2.imshow("tracker", frame)
+                cv2.imshow("tracker", frame)
 
                 if cv2.waitKey(1) == ord("q"):
                     break
