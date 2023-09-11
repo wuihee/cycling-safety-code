@@ -1,6 +1,4 @@
-import pickle
 import time
-from collections import defaultdict
 
 import blobconverter
 import cv2
@@ -17,9 +15,9 @@ class CameraWithSensor:
         distance when a vehicle is detected.
 
         Args:
-            distance_sensor (Sensor):
-            xml_path (str): _description_
-            bin_path (str): _description_
+            distance_sensor (Sensor): Distance sensor used to measure distance.
+            xml_path (str): Path to YOLO file.
+            bin_path (str): Path to YOLO file.
         """
         self.publisher = Publisher()
         self.sensor = distance_sensor
@@ -31,63 +29,6 @@ class CameraWithSensor:
         self.pipeline = depthai.Pipeline()
         self._setup_pipeline()
 
-    def process(self) -> None:
-        vehicles = defaultdict(list)
-
-        with depthai.Device(self.pipeline) as device:
-            preview = device.getOutputQueue("preview", 4, False)
-            tracklets = device.getOutputQueue("tracklets", 4, False)
-            frame = None
-
-            # Main Loop
-            while True:
-                img_frame = preview.get()
-                track = tracklets.get()
-
-                frame = img_frame.getCvFrame()
-                tracklets_data = track.tracklets
-
-                for t in tracklets_data:
-                    roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
-                    x1 = int(roi.topLeft().x)
-                    y1 = int(roi.topLeft().y)
-                    x2 = int(roi.bottomRight().x)
-                    y2 = int(roi.bottomRight().y)
-
-                    label = self.labels[t.label]
-                    vehicle_id = t.id
-
-                    try:
-                        distance = self.sensor.get_distance()
-                        time.sleep(0.02)
-                    except OSError:
-                        distance = -1
-
-                    vehicles[vehicle_id].append(distance)
-                    with open("vehicle_distance_data.pkl", "wb") as fp:
-                        pickle.dump(vehicles, fp)
-                    data = f"{self.sensor.current_time} {distance} {label}"
-                    self.publisher.publish(data)
-                    # write_to_file("./passed_cars.txt", data)
-                    print(data)
-
-                    cv2.putText(
-                        frame,
-                        str(label),
-                        (x1 + 10, y1 + 20),
-                        cv2.FONT_HERSHEY_TRIPLEX,
-                        0.5,
-                        255,
-                    )
-                    cv2.rectangle(
-                        frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX
-                    )
-
-                cv2.imshow("tracker", frame)
-
-                if cv2.waitKey(1) == ord("q"):
-                    break
-                
     def start(self, show_preview=False) -> None:
         with depthai.Device(self.pipeline) as device:
             preview = device.getOutputQueue("preview", 4, False)
@@ -158,14 +99,14 @@ class CameraWithSensor:
                 cv2.imshow("tracker", frame)
                 if cv2.waitKey(1) == ord("q"):
                     break
-                
+
     def _process_tracklets(self, frame, tracklets_data, show_preview):
         for t in tracklets_data:
             data = self._get_vehicle_distance()
             print(data)
             if show_preview:
                 self._show_preview(frame, t)
-            
+
     def _get_vehicle_distance(self):
         try:
             data = self.sensor.get_data()
@@ -185,11 +126,6 @@ class CameraWithSensor:
         label = self.labels[tracklet.label]
 
         cv2.putText(
-            frame,
-            label,
-            (x1 + 10, y1 + 20),
-            cv2.FONT_HERSHEY_TRIPLEX,
-            0.5,
-            255,
+            frame, label, (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255
         )
         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX)
