@@ -12,7 +12,7 @@ class TOFSensor(SerialSensor):
         Returns:
             str: Formatted data consisting of the time, distance and signal strength.
         """
-        distance, signal_strength = self.measure_distance()
+        distance, signal_strength = self.get_distance()
         return f"{self.current_time} {distance} {signal_strength}"
 
     def get_distance(self) -> tuple[int, int]:
