@@ -151,17 +151,17 @@ class CameraWithSensor:
     ) -> None:
         while True:
             frame = preview.get().getCvFrame()
-            tracklets = tracklets.get().tracklets
+            tracklets_data = tracklets.get().tracklets
 
-            data = self._detect_vehicles(tracklets)
+            data = self._detect_vehicles(tracklets_data)
             self.publisher.publish(data)
             print(data)
 
             if show_preview:
-                self._show_preview(frame, tracklets)
+                self._show_preview(frame, tracklets_data)
 
-    def _detect_vehicles(self, tracklets) -> str:
-        for t in tracklets:
+    def _detect_vehicles(self, tracklets_data) -> str:
+        for t in tracklets_data:
             try:
                 data = self.sensor.get_data()
                 time.sleep(0.02)
@@ -169,8 +169,8 @@ class CameraWithSensor:
             except OSError:
                 return f"{self.sensor.current_time} -1 -1"
 
-    def _show_preview(self, frame, tracklets) -> None:
-        for t in tracklets:
+    def _show_preview(self, frame, tracklets_data) -> None:
+        for t in tracklets_data:
             roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
             x1 = int(roi.topLeft().x)
             y1 = int(roi.topLeft().y)
