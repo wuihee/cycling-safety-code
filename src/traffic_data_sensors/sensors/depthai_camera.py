@@ -103,6 +103,7 @@ class CameraWithSensor:
     def _process_tracklets(self, frame, tracklets_data, show_preview):
         for t in tracklets_data:
             data = self._get_vehicle_distance()
+            self.publisher.publish(data)
             print(data)
             if show_preview:
                 self._show_preview(frame, t)
