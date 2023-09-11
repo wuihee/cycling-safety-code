@@ -31,12 +31,6 @@ class CameraWithSensor:
         self.pipeline = depthai.Pipeline()
         self._setup_pipeline()
 
-    def start(self, show_preview=False) -> None:
-        with depthai.Device(self.pipeline) as device:
-            preview = device.getOutputQueue("preview", 4, False)
-            tracklets = device.getOutputQueue("tracklets", 4, False)
-            self._camera_loop(preview, tracklets, show_preview)
-
     def process(self) -> None:
         vehicles = defaultdict(list)
 
@@ -93,6 +87,12 @@ class CameraWithSensor:
 
                 if cv2.waitKey(1) == ord("q"):
                     break
+                
+    def start(self, show_preview=False) -> None:
+        with depthai.Device(self.pipeline) as device:
+            preview = device.getOutputQueue("preview", 4, False)
+            tracklets = device.getOutputQueue("tracklets", 4, False)
+            self._camera_loop(preview, tracklets, show_preview)
 
     def _setup_pipeline(self) -> None:
         # Camera Node
@@ -152,48 +152,44 @@ class CameraWithSensor:
         while True:
             frame = preview.get().getCvFrame()
             tracklets_data = tracklets.get().tracklets
-
-            data = self._detect_vehicles(tracklets_data)
-            self.publisher.publish(data)
-            print(data)
+            self._process_tracklets(frame, tracklets_data, show_preview)
 
             if show_preview:
-                self._show_preview(frame, tracklets_data)
-
-    def _detect_vehicles(self, tracklets_data) -> str:
+                cv2.imshow("tracker", frame)
+                if cv2.waitKey(1) == ord("q"):
+                    break
+                
+    def _process_tracklets(self, frame, tracklets_data, show_preview):
         for t in tracklets_data:
-            try:
-                data = self.sensor.get_data()
-                time.sleep(0.02)
-                return data
-            except OSError:
-                return f"{self.sensor.current_time} -1 -1"
+            data = self._get_vehicle_distance()
+            print(data)
+            if show_preview:
+                self._show_preview(frame, t)
+            
+    def _get_vehicle_distance(self):
+        try:
+            data = self.sensor.get_data()
+            time.sleep(0.02)
+            return data
+        except OSError:
+            return f"{self.sensor.current_time} -1 -1"
+        return ""
 
-    def _show_preview(self, frame, tracklets_data) -> None:
-        for t in tracklets_data:
-            roi = t.roi.denormalize(frame.shape[1], frame.shape[0])
-            x1 = int(roi.topLeft().x)
-            y1 = int(roi.topLeft().y)
+    def _show_preview(self, frame, tracklet) -> None:
+        roi = tracklet.roi.denormalize(frame.shape[1], frame.shape[0])
+        x1 = int(roi.topLeft().x)
+        y1 = int(roi.topLeft().y)
+        x2 = int(roi.bottomRight().x)
+        y2 = int(roi.bottomRight().y)
 
-            label = self.labels[t.label]
+        label = self.labels[tracklet.label]
 
-            cv2.putText(
-                frame,
-                label,
-                (x1 + 10, y1 + 20),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                255,
-            )
-            cv2.putText(
-                frame,
-                label,
-                (x1 + 10, y1 + 20),
-                cv2.FONT_HERSHEY_TRIPLEX,
-                0.5,
-                255,
-            )
-            cv2.imshow("tracker", frame)
-
-            if cv2.waitKey(1) == ord("q"):
-                break
+        cv2.putText(
+            frame,
+            label,
+            (x1 + 10, y1 + 20),
+            cv2.FONT_HERSHEY_TRIPLEX,
+            0.5,
+            255,
+        )
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX)
