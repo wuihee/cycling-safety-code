@@ -1,5 +1,5 @@
 from ..ports import find_laser_port
-from .serial_sensor import Sensor
+from .serial_sensor import SerialSensor
 
 
 class Commands:
@@ -10,7 +10,7 @@ class Commands:
     CONTINUOUS_AUTO = b"\xAA\x00\x00\x20\x00\x01\x00\x04\x25"
 
 
-class LaserSensor(Sensor):
+class LaserSensor(SerialSensor):
     def __init__(self) -> None:
         self.port = find_laser_port()
         super().__init__(self.port, 115200)
@@ -27,7 +27,7 @@ class LaserSensor(Sensor):
         distance, signal_strength = self.measure_distance()
         return f"{self.current_time} {distance} {signal_strength}"
 
-    def measure_distance(self) -> tuple[int, int]:
+    def get_distance(self) -> tuple[int, int]:
         """
         Measure the current distance with the laser sensor.
 

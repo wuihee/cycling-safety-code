@@ -1,7 +1,7 @@
-from .serial_sensor import Sensor
+from .serial_sensor import SerialSensor
 
 
-class TOFSensor(Sensor):
+class TOFSensor(SerialSensor):
     def __init__(self) -> None:
         super().__init__("/dev/ttyS0", 921600)
 
@@ -15,7 +15,7 @@ class TOFSensor(Sensor):
         distance, signal_strength = self.measure_distance()
         return f"{self.current_time} {distance} {signal_strength}"
 
-    def measure_distance(self) -> tuple[int, int]:
+    def get_distance(self) -> tuple[int, int]:
         """
         Measure the current distance with the laser sensor.
 

@@ -1,10 +1,11 @@
-import datetime
 import time
 
 import smbus2
 
+from .sensor import Sensor
 
-class LidarLiteV4:
+
+class LidarLiteV4(Sensor):
     def __init__(self, address=0x62):
         """
         Initializes the LIDAR-Lite sensor interface.
@@ -16,17 +17,6 @@ class LidarLiteV4:
         self.address = address
         self.distance_register = 0x00
         self.distance_write_value = 0x04
-
-    @property
-    def current_time(self) -> str:
-        """
-        Returns the current time.
-
-        Returns:
-            str: Format is HH:MM:SS
-        """
-        t = str(datetime.datetime.now())
-        return t.split(" ")[1].split(".")[0]
 
     def get_data(self) -> str:
         """
@@ -69,8 +59,3 @@ class LidarLiteV4:
         high_byte = self.bus.read_byte_data(self.address, 0x10)
         low_byte = self.bus.read_byte_data(self.address, 0x11)
         return (low_byte << 8) + high_byte
-
-
-if __name__ == "__main__":
-    lidar = LidarLiteV4()
-    print(lidar.get_distance())

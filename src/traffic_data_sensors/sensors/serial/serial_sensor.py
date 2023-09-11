@@ -1,9 +1,9 @@
-import datetime
-
 import serial
 
+from ..sensor import Sensor
 
-class Sensor:
+
+class SerialSensor(Sensor):
     """
     Base class for serial sensors which contain common useful methods.
     """
@@ -12,16 +12,11 @@ class Sensor:
         self.ser = serial.Serial(port=port, baudrate=baudrate, timeout=1)
         self.ser.reset_input_buffer()
 
-    @property
-    def current_time(self) -> str:
-        """
-        Returns the current time.
+    def get_data(self) -> None:
+        pass
 
-        Returns:
-            str: Format is HH:MM:SS
-        """
-        t = str(datetime.datetime.now())
-        return t.split(" ")[1].split(".")[0]
+    def get_distance(self) -> None:
+        pass
 
     def _read_protocol(self, number_of_bytes: int) -> list[int]:
         """

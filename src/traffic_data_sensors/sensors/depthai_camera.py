@@ -7,13 +7,22 @@ import cv2
 import depthai
 
 from ..aws_iot.publish import Publisher
-from .lidar_lite_v4 import LidarLiteV4
+from .sensor import Sensor
 
 
 class CameraWithSensor:
-    def __init__(self, xml_path, bin_path) -> None:
+    def __init__(self, distance_sensor: Sensor, xml_path: str, bin_path: str) -> None:
+        """
+        Inialize CameraWithSensor object that uses DepthAI's camera to measure
+        distance when a vehicle is detected.
+
+        Args:
+            distance_sensor (Sensor):
+            xml_path (str): _description_
+            bin_path (str): _description_
+        """
         self.publisher = Publisher()
-        self.sensor = LidarLiteV4()
+        self.sensor = distance_sensor
 
         self.labels = {2: "Car", 5: "Bus", 8: "Truck"}
         self.network_path = blobconverter.from_openvino(
@@ -147,6 +156,7 @@ class CameraWithSensor:
             data = self._detect_vehicles(tracklets)
             self.publisher.publish(data)
             print(data)
+
             if show_preview:
                 self._show_preview(frame, tracklets)
 
@@ -175,7 +185,6 @@ class CameraWithSensor:
                 0.5,
                 255,
             )
-
             cv2.putText(
                 frame,
                 label,
@@ -184,7 +193,6 @@ class CameraWithSensor:
                 0.5,
                 255,
             )
-
             cv2.imshow("tracker", frame)
 
             if cv2.waitKey(1) == ord("q"):
