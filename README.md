@@ -229,6 +229,12 @@ To check the status of your service for degbugging:
 sudo systemctl status SERVICE_NAME.service
 ```
 
+To stop your service:
+
+```bash
+sudo systemctl stop SERVICE_NAME.service
+```
+
 ## AWS IoT Setup
 
 To use the [`aws_iot`](./src/aws_iot/) module to publish data from sensors to AWS IoT Message Broker, register for AWS IoT core, download the AWS IoT Device Python SDK, and copy and paste the necessary certificates in the certs folder.
