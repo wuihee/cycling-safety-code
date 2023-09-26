@@ -84,7 +84,7 @@ sensor = TOFSensor()
 sensor.get_data()
 ```
 
-### [JRT BB2X Laser Distance Sensor](https://www.alibaba.com/product-detail/)
+### [JRT BB2X Laser Distance Sensor](https://www.alibaba.com/product-detail/JRT-Laser-Distance-Module-High-Accuracy_1600935670921.html?spm=a2700.galleryofferlist.p_offer.d_price.386f1f20EnJdbn&s=p)
 
 - Follow the [serial sensor setup](#serial-sensor-setup).
 - **Baudrate**: 115200bps.
