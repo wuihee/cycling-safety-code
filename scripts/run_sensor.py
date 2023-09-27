@@ -1,9 +1,9 @@
 import os
 import time
 
-from traffic_data_sensors.aws_iot.publish import Publisher
-from traffic_data_sensors.sensors.lidar_lite_v4 import LidarLiteV4
-from traffic_data_sensors.utils import cd_to_parent_dir, wait_for_i2c, wait_for_internet
+from cycling_safety.aws_iot.publish import Publisher
+from cycling_safety.sensors.lidar_lite_v4 import LidarLiteV4
+from cycling_safety.utils import cd_to_parent_dir, wait_for_i2c, wait_for_internet
 
 cd_to_parent_dir()
 os.chdir("../..")
@@ -27,5 +27,5 @@ while True:
         print(error_count)
         wait_for_i2c(62, timeout=1)
     except Exception as e:
-        print("Waiting for internet")
+        print(f"Waiting for internet {e}")
         wait_for_internet()

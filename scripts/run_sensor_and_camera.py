@@ -1,8 +1,8 @@
 import os
 
-from traffic_data_sensors.sensors.depthai_camera import CameraWithSensor
-from traffic_data_sensors.utils import cd_to_parent_dir, wait_for_internet
-from traffic_data_sensors.sensors.lidar_lite_v4 import LidarLiteV4
+from cycling_safety.sensors.depthai_camera import CameraWithSensor
+from cycling_safety.utils import cd_to_parent_dir, wait_for_internet
+from cycling_safety.sensors.lidar_lite_v4 import LidarLiteV4
 
 cd_to_parent_dir()
 os.chdir("../..")
