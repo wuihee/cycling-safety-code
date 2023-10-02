@@ -1,9 +1,21 @@
-from .serial_sensor import SerialSensor
+from ..utils.ports import find_laser_port
+from .serial_base import SerialSensor
 
 
-class TOFSensor(SerialSensor):
+class Commands:
+    SINGLE_MEASURE = b"\xaa\x00\x00\x20\x00\x01\x00\x02\x23"
+    CONTINUOUS = b"\xAA\x00\x00\x20\x00\x01\x12\x07\x3A"
+    CONTINUOUS_SLOW = b"\xaa\x00\x00\x20\x00\x01\x00\x05\x26"
+    CONTINUOUS_FAST = b"\xAA\x00\x00\x24\x00\x01\x00\x07\x2C"
+    CONTINUOUS_AUTO = b"\xAA\x00\x00\x20\x00\x01\x00\x04\x25"
+
+
+class LaserBB2XSensor(SerialSensor):
     def __init__(self) -> None:
-        super().__init__("/dev/ttyS0", 921600)
+        self.port = find_laser_port()
+        super().__init__(self.port, 115200)
+        # super().__init__("COM3", 115200)
+        # super().__init__("/dev/ttyUSB0", 115200)
 
     def get_data(self) -> str:
         """
@@ -22,14 +34,15 @@ class TOFSensor(SerialSensor):
         Returns:
             tuple[int, int]: distance and signal strength respectively.
         """
+        self.ser.write(Commands.SINGLE_MEASURE)
         protocol = self._read_distance_protocol()
+
         if not self._is_valid_protocol(protocol):
+            self.ser.reset_input_buffer()
             return -1, -1
 
         distance = self._get_distance_from_protocol(protocol)
         strength = self._get_strength_from_protocol(protocol)
-        if strength == 0:
-            distance = -1
         return distance, strength
 
     def _read_distance_protocol(self) -> list[int]:
@@ -39,7 +52,7 @@ class TOFSensor(SerialSensor):
         Returns:
             list[int]: An array of decimals reprenting the resepective bytes.
         """
-        return self._read_protocol(16)
+        return self._read_protocol(13)
 
     def _is_valid_protocol(self, protocol: list[int]) -> bool:
         """
@@ -54,15 +67,17 @@ class TOFSensor(SerialSensor):
         if not protocol:
             return False
 
-        if protocol[:3] != (87, 0, 255):
+        # The header must equal "\xAA" i.e. 170.
+        if protocol[0] != 170:
             return False
 
-        return sum(protocol[:-1]) % 256 == protocol[-1]
+        # Sum check.
+        return sum(protocol[1:-1]) % 256 == protocol[-1]
 
     def _get_distance_from_protocol(self, protocol: str) -> int:
         """
         Find the distance measured given a distance protocol. The distance
-        is found by representing bytes 8 to 10 (0-based indexing), converting
+        is found by representing bytes 6 to 9 (0-based indexing), converting
         them to hex and finding the integer representation.
 
         Args:
@@ -71,12 +86,12 @@ class TOFSensor(SerialSensor):
         Returns:
             int: Distance in mm.
         """
-        return self._get_value_from_protocol(protocol, 10, 8, count=-1)
+        return self._get_value_from_protocol(protocol, 6, 9)
 
     def _get_strength_from_protocol(self, protocol: str) -> int:
         """
         Find the signal strength from a given distance protocol. The signal
-        strength is found by converting bytes 12 and 13 (0-based indexing)
+        strength is found by converting bytes 10 and 11 (0-based indexing)
         to hex and finding the integer representation.
 
         Args:
@@ -85,4 +100,17 @@ class TOFSensor(SerialSensor):
         Returns:
             int: The higher the signal strength the more inaccurate the distance.
         """
-        return self._get_value_from_protocol(protocol, 13, 12)
+        return self._get_value_from_protocol(protocol, 10, 11)
+
+
+class ExtendedLaserSensor(LaserBB2XSensor):
+    def __init__(self, publisher) -> None:
+        super().__init__()
+        self.publisher = publisher
+
+    def measure_distance_continuous(self):
+        self.ser.write(Commands.CONTINUOUS)
+        while True:
+            data = self.ser.read(4).decode("ascii").strip()
+            self.publisher.publish(data)
+            print(data)

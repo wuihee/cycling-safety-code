@@ -5,7 +5,7 @@ import cv2
 import depthai
 
 from ..aws_iot.publish import Publisher
-from .sensor import Sensor
+from ..sensors.base.sensor import Sensor
 
 
 class CameraWithSensor:

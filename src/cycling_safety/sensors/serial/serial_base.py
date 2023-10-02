@@ -1,6 +1,6 @@
 import serial
 
-from ..sensor import Sensor
+from ..base.sensor import Sensor
 
 
 class SerialSensor(Sensor):

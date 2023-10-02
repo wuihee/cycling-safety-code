@@ -1,8 +1,8 @@
 import os
 import time
 
-from cycling_safety.aws_iot.publish import Publisher
-from cycling_safety.sensors.lidar_lite_v4 import LidarLiteV4
+from cycling_safety.aws_iot import Publisher
+from cycling_safety.sensors.i2c import LIDARLiteV4
 from cycling_safety.utils import cd_to_parent_dir, wait_for_i2c, wait_for_internet
 
 cd_to_parent_dir()
@@ -13,7 +13,7 @@ wait_for_i2c(62)
 print("Connected to internet")
 
 publisher = Publisher()
-sensor = LidarLiteV4()
+sensor = LIDARLiteV4()
 error_count = 0
 
 while True:

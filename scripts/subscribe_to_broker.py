@@ -1,4 +1,4 @@
-from cycling_safety.aws_iot.subscribe import Subscriber
+from cycling_safety.aws_iot import Subscriber
 
 subscriber = Subscriber()
 subscriber.subscribe()

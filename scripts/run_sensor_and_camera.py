@@ -1,13 +1,13 @@
 import os
 
-from cycling_safety.sensors.depthai_camera import CameraWithSensor
+from cycling_safety.camera import CameraWithSensor
+from cycling_safety.sensors.i2c import LIDARLiteV4
 from cycling_safety.utils import cd_to_parent_dir, wait_for_internet
-from cycling_safety.sensors.lidar_lite_v4 import LidarLiteV4
 
 cd_to_parent_dir()
 os.chdir("../..")
 
-sensor = LidarLiteV4()
+sensor = LIDARLiteV4()
 xml_path = "./yolo/yolov6t_coco_416x416.xml"
 bin_path = "./yolo/yolov6t_coco_416x416.bin"
 

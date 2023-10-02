@@ -1,4 +1,4 @@
-from .serial_sensor import SerialSensor
+from .serial_base import SerialSensor
 
 
 class UltrasonicSensor(SerialSensor):

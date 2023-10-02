@@ -2,10 +2,10 @@ import time
 
 import smbus2
 
-from .sensor import Sensor
+from ..base.sensor import Sensor
 
 
-class LidarLiteV4(Sensor):
+class LIDARLiteV4(Sensor):
     def __init__(self, address=0x62):
         """
         Initializes the LIDAR-Lite sensor interface.
