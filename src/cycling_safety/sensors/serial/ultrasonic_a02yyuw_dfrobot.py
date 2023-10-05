@@ -13,7 +13,7 @@ class UltrasonicSensor(SerialSensor):
             str: Formatted data consisting of the time and distance.
         """
         distance = self.get_distance()
-        return f"{self.current_time} {distance}"
+        return f"{self.current_time} {distance} -1"
 
     def get_distance(self) -> int:
         """
