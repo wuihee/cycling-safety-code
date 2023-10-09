@@ -5,9 +5,11 @@ Code to run the sensors and publish/subscribe to AWS IoT message broker in [traf
 ## Table of Contents
 
 1. [Installation](#installation)
-2. [Usage](#usage)
-3. [Raspberry Pi Autostart Setup](#raspberry-pi-autostart-setup)
+2. [Sensors](#sensors)
+3. [Sensor Setup](#sensor-setup)
 4. [AWS IoT Setup](#aws-iot-setup)
+5. [Raspberry Pi Autostart Setup](#raspberry-pi-autostart-setup)
+6. [API](#api)
 
 ## Installation
 
@@ -31,13 +33,20 @@ This will allow you to import `traffic_data_sensors` and run .py files in [scrip
 pip install -e .
 ```
 
-## Usage
+## Sensors
+
+- [WaveShare TOF Sensor](https://www.waveshare.com/tof-laser-range-sensor.htm) (**Baudrate**: 921600bps)
+- [JRT BB2X Laser Distance Sensor](https://www.alibaba.com/product-detail/JRT-Laser-Distance-Module-High-Accuracy_1600935670921.html?spm=a2700.galleryofferlist.p_offer.d_price.386f1f20EnJdbn&s=p) (**Baudrate**: 115200bps)
+- [Garmin LIDAR-Lite V4](https://www.sparkfun.com/products/18009)
+- [DFRobot A02YYUW Ultrasonic Sensor](https://www.dfrobot.com/product-1935.html)
+
+## Sensor Setup
 
 **IMPORTANT: To ensure good connectivity to the Raspberry Pi, make sure the Raspberry Pi is connected to a 5V power source and if using USB cables, make sure that they are USB 2.0.**
 
-### Serial Sensor Setup
+### Serial Setup
 
-#### Windows Setup
+#### Using Serial Sensors with Windows
 
 To use the sensor on Windows with the software provided:
 
@@ -45,7 +54,7 @@ To use the sensor on Windows with the software provided:
 - **Enable COM Ports**: Windows Device Manager &rarr; Actions &rarr; Add Legacy Hardware &rarr; And installing Ports (COM & LPT).
 - **Baud Rate**: Finally, for the sensor to work with the software, make sure the baudrate is correctly set.
 
-#### Raspberry Pi UART Setup
+#### Using Serial Sensors with Raspberry Pi
 
 To use the sensor on the Raspberry Pi:
 
@@ -70,37 +79,9 @@ To use the sensor on the Raspberry Pi:
     enable_uart=1
     ```
 
-### [WaveShare TOF Sensor](https://www.waveshare.com/tof-laser-range-sensor.htm)
+### I2C Setup
 
-- Follow the [serial sensor setup](#serial-sensor-setup).
-- **Baudrate**: 921600bps
-
-#### TOF Sensor Code
-
-```python
-from traffic_data_sensors.sensors.serial.waveshare_tof import TOFSensor
-
-sensor = TOFSensor()
-sensor.get_data()
-```
-
-### [JRT BB2X Laser Distance Sensor](https://www.alibaba.com/product-detail/JRT-Laser-Distance-Module-High-Accuracy_1600935670921.html?spm=a2700.galleryofferlist.p_offer.d_price.386f1f20EnJdbn&s=p)
-
-- Follow the [serial sensor setup](#serial-sensor-setup).
-- **Baudrate**: 115200bps.
-
-#### Laser Sensor Code
-
-```python
-from traffic_data_sensors.sensors.serial.jrt_laser import LaserSensor
-
-sensor = LaserSensor()
-sensor.get_data()
-```
-
-### [LIDAR-Lite V4](https://www.sparkfun.com/products/18009)
-
-#### Raspberry Pi I2C Setup
+#### Using I2C Sensors with Raspberry Pi
 
 1. **Enable I2C Settings**: Enter the following command in the terminal:
 
@@ -141,33 +122,9 @@ sensor.get_data()
     i2cdetect -y 1
     ```
 
-#### LIDAR Sensor Code
+## AWS IoT Setup
 
-```python
-from traffic_data_sensors.sensors.lidar_lite_v4 import LidarLiteV4
-
-sensor = LidarLiteV4()
-sensor.get_data()
-```
-
-### Publish to AWS IoT Message Broker
-
-```python
-from serial_sensors.client.publish import Publisher
-
-publisher = Publisher()
-data = "data to publish"
-publisher.publish(data)
-```
-
-### Subscribe to AWS IoT Message Broker
-
-```python
-from traffic_data_sensors.aws_iot.subscribe import Subscriber
-
-subscriber = Subscriber()
-subscriber.subscribe()
-```
+To use the [`aws_iot`](./src/aws_iot/) module to publish data from sensors to AWS IoT Message Broker, register for AWS IoT core, download the AWS IoT Device Python SDK, and copy and paste the necessary certificates in the certs folder.
 
 ## Raspberry Pi Autostart Setup
 
@@ -235,6 +192,48 @@ To stop your service:
 sudo systemctl stop SERVICE_NAME.service
 ```
 
-## AWS IoT Setup
+## API
 
-To use the [`aws_iot`](./src/aws_iot/) module to publish data from sensors to AWS IoT Message Broker, register for AWS IoT core, download the AWS IoT Device Python SDK, and copy and paste the necessary certificates in the certs folder.
+### Publish to AWS IoT Message Broker
+
+```python
+from cycling_safety.aws_iot import Publisher
+
+publisher = Publisher()
+data = "data to publish"
+publisher.publish(data)
+```
+
+### Subscribe to AWS IoT Message Broker
+
+```python
+from cycling_safety.aws_iot import Subscriber
+
+subscriber = Subscriber()
+subscriber.subscribe()
+```
+
+### Using a Sensor
+
+```python
+# Importing sensors.
+from cycling_safety.sensors.serial import LaserBB2XSensor
+from cycling_safety.sensors.serial import LaserTOFSensor
+from cycling_safety.sensors.serial import UltrasonicSensor
+from cycling_safety.sensors.i2c import LIDARLiteV4
+
+# Intializing sensor object.
+sensor = LaserTOFSensor()
+
+# Getting data.
+sensor.get_data()
+```
+
+### Running DepthAI Camera
+
+```python
+from cycling_safety.camera import CameraWithSensor
+
+camera_with_sensor = CameraWithSensor
+camera_with_sensor.start()
+```
