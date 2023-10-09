@@ -1,4 +1,4 @@
-from .serial_base import SerialSensor
+from ..base import SerialSensor
 
 
 class LaserTOFSensor(SerialSensor):

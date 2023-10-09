@@ -1,5 +1,5 @@
+from ..base import SerialSensor
 from ..utils.ports import find_laser_port
-from .serial_base import SerialSensor
 
 
 class Commands:

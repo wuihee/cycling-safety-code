@@ -1,11 +1,7 @@
-import time
-
-import smbus2
-
-from ..base.sensor import Sensor
+from ..base import I2CSensor
 
 
-class LIDARLiteV4(Sensor):
+class LIDARLiteV4(I2CSensor):
     def __init__(self, address=0x62):
         """
         Initializes the LIDAR-Lite sensor interface.
@@ -13,8 +9,7 @@ class LIDARLiteV4(Sensor):
         Args:
             address (hexadecimal, optional): I2C address of the sensor. Defaults to 0x62.
         """
-        self.bus = smbus2.SMBus(1)
-        self.address = address
+        super().__init__(address=address)
         self.distance_register = 0x00
         self.distance_write_value = 0x04
 
@@ -35,27 +30,5 @@ class LIDARLiteV4(Sensor):
         Returns:
             int: Distance.
         """
-        self._write(self.distance_register, self.distance_write_value)
-        return self._read_distance() * 10
-
-    def _write(self, register, value) -> None:
-        """
-        Write a byte to a give register.
-
-        Args:
-            register (_type_): Register address to write to.
-            value (_type_): Byte value to write.
-        """
-        self.bus.write_byte_data(self.address, register, value)
-        time.sleep(0.02)
-
-    def _read_distance(self):
-        """
-        Read and return the measured distance from the sensor.
-
-        Returns:
-            _type_: Measured distance in centimeters.
-        """
-        high_byte = self.bus.read_byte_data(self.address, 0x10)
-        low_byte = self.bus.read_byte_data(self.address, 0x11)
-        return (low_byte << 8) + high_byte
+        self._write_byte(self.distance_register, self.distance_write_value)
+        return self._read_16bit_value(0x10, 0x11) * 10
