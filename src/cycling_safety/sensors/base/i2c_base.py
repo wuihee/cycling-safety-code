@@ -10,7 +10,8 @@ class I2CSensor(Sensor):
 
         Args:
             bus_number (int, optional): I2C bus number. Defaults to 1.
-            address (hexadecimal, optional): I2C address of the sensor. Defaults to 0x00.
+            address (hexadecimal, optional): I2C address of the sensor.
+                                             Defaults to 0x00.
         """
         self.bus = smbus2.SMBus(bus_number)
         self.address = address
@@ -43,7 +44,9 @@ class I2CSensor(Sensor):
         """
         return self.bus.read_byte_data(self.address, register)
 
-    def _read_16bit_value(self, high_byte_register: int, low_byte_register: int) -> int:
+    def _read_16bit_value(
+        self, high_byte_register: int, low_byte_register: int
+    ) -> int:
         """
         Read a 16-bit value from two given consecutive registers.
 

@@ -20,7 +20,8 @@ class SerialSensor(Sensor):
 
     def _read_protocol(self, number_of_bytes: int) -> list[int]:
         """
-        Read a specified number of bytes from the sensor which forms a protocol.
+        Read a specified number of bytes from the sensor which forms a
+        protocol.
 
         Args:
             number_of_bytes (int): Number of bytes to read from the sensor.
@@ -34,7 +35,8 @@ class SerialSensor(Sensor):
         self, protocol: list[int], start: int, end: int, count=1
     ) -> int:
         """
-        Get a speicifed value from the protocol, e.g. distance, signal strength.
+        Get a speicifed value from the protocol, e.g. distance, signal
+        strength.
 
         Args:
             protocol (list[int]): Protocol from self._read_protocol().
@@ -50,7 +52,8 @@ class SerialSensor(Sensor):
 
     def _to_hex_string(self, information: list[int]) -> str:
         """
-        Takes a slice of the bytes in protocol and converts it into a single hex string.
+        Takes a slice of the bytes in protocol and converts it into a single
+        hex string.
 
         Args:
             information (list[int]): List of decimal bytes.

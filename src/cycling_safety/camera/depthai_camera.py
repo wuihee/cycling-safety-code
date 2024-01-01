@@ -9,7 +9,9 @@ from ..sensors.base import Sensor
 
 
 class CameraWithSensor:
-    def __init__(self, distance_sensor: Sensor, xml_path: str, bin_path: str) -> None:
+    def __init__(
+        self, distance_sensor: Sensor, xml_path: str, bin_path: str
+    ) -> None:
         """
         Inialize CameraWithSensor object that uses DepthAI's camera to measure
         distance when a vehicle is detected.
@@ -39,7 +41,9 @@ class CameraWithSensor:
         # Camera Node
         cam_rgb = self.pipeline.createColorCamera()
         cam_rgb.setPreviewSize(416, 416)
-        cam_rgb.setResolution(depthai.ColorCameraProperties.SensorResolution.THE_1080_P)
+        cam_rgb.setResolution(
+            depthai.ColorCameraProperties.SensorResolution.THE_1080_P
+        )
         cam_rgb.setInterleaved(False)
         cam_rgb.setColorOrder(depthai.ColorCameraProperties.ColorOrder.BGR)
         cam_rgb.setFps(40)
@@ -53,14 +57,18 @@ class CameraWithSensor:
         detection_network.setAnchors(
             [10, 14, 23, 27, 37, 58, 81, 82, 135, 169, 344, 319]
         )
-        detection_network.setAnchorMasks({"side26": [1, 2, 3], "side13": [3, 4, 5]})
+        detection_network.setAnchorMasks(
+            {"side26": [1, 2, 3], "side13": [3, 4, 5]}
+        )
         detection_network.setIouThreshold(0.5)
         detection_network.input.setBlocking(False)
 
         # Object Tracker Node
         object_tracker = self.pipeline.createObjectTracker()
         object_tracker.setDetectionLabelsToTrack(list(self.labels.keys()))
-        object_tracker.setTrackerType(depthai.TrackerType.ZERO_TERM_COLOR_HISTOGRAM)
+        object_tracker.setTrackerType(
+            depthai.TrackerType.ZERO_TERM_COLOR_HISTOGRAM
+        )
         object_tracker.setTrackerIdAssignmentPolicy(
             depthai.TrackerIdAssignmentPolicy.SMALLEST_ID
         )
@@ -115,7 +123,6 @@ class CameraWithSensor:
             return data
         except OSError:
             return f"{self.sensor.current_time} -1 -1"
-        return ""
 
     def _show_preview(self, frame, tracklet) -> None:
         roi = tracklet.roi.denormalize(frame.shape[1], frame.shape[0])
@@ -127,6 +134,13 @@ class CameraWithSensor:
         label = self.labels[tracklet.label]
 
         cv2.putText(
-            frame, label, (x1 + 10, y1 + 20), cv2.FONT_HERSHEY_TRIPLEX, 0.5, 255
+            frame,
+            label,
+            (x1 + 10, y1 + 20),
+            cv2.FONT_HERSHEY_TRIPLEX,
+            0.5,
+            255,
         )
-        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX)
+        cv2.rectangle(
+            frame, (x1, y1), (x2, y2), (255, 0, 0), cv2.FONT_HERSHEY_SIMPLEX
+        )
