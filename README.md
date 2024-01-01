@@ -13,6 +13,13 @@ Code to run the sensors and publish/subscribe to AWS IoT message broker in [traf
 
 ## Installation
 
+### Clone the Repository
+
+```bash
+git clone https://github.com/wuihee/cycling-safety-code.git
+cd cycling-safety-code
+```
+
 ### Install Dependencies
 
 ```bash
@@ -30,7 +37,7 @@ python setup.py bdist_wheel sdist
 This will allow you to import `traffic_data_sensors` and run .py files in [scripts](./scripts/) locally.
 
 ```bash
-pip install -e .
+pip install .
 ```
 
 ## Sensors
@@ -148,7 +155,7 @@ sudo ./create_service.sh
 
 ### Manually Create Service
 
-Create a service in `/usr/lib/systemd/system`. E.g. `sensor.service`.
+Create a service (i.e. create a new file ending in .service) in `/usr/lib/systemd/system`. E.g. `sensor.service`.
 
 - Include the path to your script in ExecStart.
 - Replace `YOUR_USER` with the output of command `whoami`.
@@ -237,3 +244,9 @@ from cycling_safety.camera import CameraWithSensor
 camera_with_sensor = CameraWithSensor
 camera_with_sensor.start()
 ```
+
+## To Replicate
+
+1. Follow [installation](#installation) instructions.
+2. Follow [autostart](#raspberry-pi-autostart-setup) instructions where the script to autostart is [run_sensor_and_camera.py](./scripts/run_sensor_and_camera.py).
+3. Ensure that the Raspberry Pi is connected to a LiDAR sensor and the depthAI camera.
