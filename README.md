@@ -2,6 +2,12 @@
 
 Code to run the sensors and publish/subscribe to AWS IoT message broker in [traffic data analysis project](https://github.com/wuihee/Traffic-Data-Collection/tree/main).
 
+## To Replicate
+
+1. Follow [installation](#installation) instructions.
+2. Follow [autostart](#raspberry-pi-autostart-setup) instructions where the script to autostart is [run_sensor_and_camera.py](./scripts/run_sensor_and_camera.py).
+3. Ensure that the Raspberry Pi is connected to a LiDAR sensor and the depthAI camera.
+
 ## Table of Contents
 
 1. [Installation](#installation)
@@ -244,9 +250,3 @@ from cycling_safety.camera import CameraWithSensor
 camera_with_sensor = CameraWithSensor
 camera_with_sensor.start()
 ```
-
-## To Replicate
-
-1. Follow [installation](#installation) instructions.
-2. Follow [autostart](#raspberry-pi-autostart-setup) instructions where the script to autostart is [run_sensor_and_camera.py](./scripts/run_sensor_and_camera.py).
-3. Ensure that the Raspberry Pi is connected to a LiDAR sensor and the depthAI camera.
